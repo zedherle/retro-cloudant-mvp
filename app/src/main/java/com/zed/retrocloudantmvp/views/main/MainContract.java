@@ -17,18 +17,13 @@ public interface MainContract {
 
         void showRecords(long records);
 
-        void onReplicationComplete(boolean status);
-
     }
 
     interface IMainPresenter extends BaseContract.IBasePresenter {
+
         void getItemList();
 
         void startReplicationProcess();
-
-        void replicationCompleted();
-
-        void replicationFailed();
 
         void getProductMasterCount();
     }

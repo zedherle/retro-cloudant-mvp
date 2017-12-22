@@ -11,6 +11,7 @@ import java.util.Map;
 
 public class Products {
 
+    static final String DOC_TYPE = "z_items";
     private String barcode;
     private String description;
     private String category;
@@ -18,10 +19,41 @@ public class Products {
     private String manufacturer;
     private String brand;
     private double mrp;
-
-    static final String DOC_TYPE = "z_items";
     private String type = DOC_TYPE;
     private DocumentRevision revision;
+
+    public static String getDocType() {
+        return DOC_TYPE;
+    }
+
+    public static Products fromRevision(DocumentRevision rev) {
+
+        Products products = new Products();
+        products.revision = rev;
+
+        Map<String, Object> map = rev.getBody().asMap();
+
+        //if(map.containsKey("type") && map.get("type").equals(Products.DOC_TYPE)) {
+
+        products.setBarcode((String) map.get("barcode"));
+        products.setDescription((String) map.get("description"));
+        products.setCategory((String) map.get("category"));
+        products.setSubcat((String) map.get("subcat"));
+        products.setManufacturer((String) map.get("manufacturer"));
+        products.setBrand((String) map.get(("brand")));
+        Object value = valueToStringOrEmpty(map, "mrp");
+        products.setMrp(Double.parseDouble(value.toString()));
+        products.setType((String) map.get("type"));
+
+        return products;
+        //}
+        // return null;
+    }
+
+    private static Object valueToStringOrEmpty(Map<String, ?> map, String key) {
+        Object value = map.get(key);
+        return value == null ? 0 : value;
+    }
 
     public String getBarcode() {
         return barcode;
@@ -79,11 +111,6 @@ public class Products {
         this.mrp = mrp;
     }
 
-
-    public static String getDocType() {
-        return DOC_TYPE;
-    }
-
     public String getType() {
         return type;
     }
@@ -100,28 +127,6 @@ public class Products {
         this.revision = revision;
     }
 
-    public static Products fromRevision(DocumentRevision rev) {
-
-        Products products = new Products();
-        products.revision = rev;
-
-        Map<String, Object> map = rev.getBody().asMap();
-        if(map.containsKey("type") && map.get("type").equals(Products.DOC_TYPE)) {
-
-            products.setBarcode((String)map.get("barcode"));
-            products.setDescription((String)map.get("description"));
-            products.setCategory((String)map.get("category"));
-            products.setSubcat((String)map.get("subcat"));
-            products.setManufacturer((String)map.get("manufacturer"));
-            products.setBrand((String)map.get(("brand")));
-            products.setMrp((double)map.get("mrp"));
-            products.setType((String) map.get("type"));
-
-            return products;
-        }
-        return null;
-    }
-
     public Map<String, Object> asMap() {
 
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -136,4 +141,6 @@ public class Products {
         map.put("type", type);
         return map;
     }
+
+
 }

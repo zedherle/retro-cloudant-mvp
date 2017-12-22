@@ -4,10 +4,9 @@ import android.content.Context;
 import android.util.Log;
 
 import com.cloudant.sync.documentstore.DocumentStoreException;
-import com.zed.retrocloudantmvp.data.network.APIClient;
+import com.zed.retrocloudantmvp.data.db.cloudant_ds.CloudantHelper;
 import com.zed.retrocloudantmvp.data.network.APIEndpointInterface;
 import com.zed.retrocloudantmvp.data.network.model.ItemsResponse;
-import com.zed.retrocloudantmvp.data.db.cloudant_ds.CloudantHelper;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -37,8 +36,8 @@ public class MainPresenter implements MainContract.IMainPresenter{
     @Override
     public void onCreate() {
 
-        apiEndpointInterface = APIClient.getClient().create(APIEndpointInterface.class);
-        cloudantHelper = new CloudantHelper(context);
+        //  apiEndpointInterface = APIClient.getClient().create(APIEndpointInterface.class);
+        cloudantHelper = CloudantHelper.getInstance(context);
 
     }
 
@@ -101,29 +100,13 @@ public class MainPresenter implements MainContract.IMainPresenter{
     public void startReplicationProcess() {
         try {
             cloudantHelper.reloadReplicationSettings();
-            cloudantHelper.setReplicationListener(this);
+
         } catch (URISyntaxException e) {
             Log.e("MAIN PRESENTER", "Unable to construct remote URI from configuration", e);
         }
 
     }
 
-    @Override
-    public void replicationCompleted() {
-
-        iMainView.onReplicationComplete(true);
-        try {
-            Log.e("MAIN PRESENTER", "Rep Completed" + cloudantHelper.allProducts());
-        } catch (DocumentStoreException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void replicationFailed() {
-
-        iMainView.onReplicationComplete(false);
-    }
 
     @Override
     public void getProductMasterCount() {

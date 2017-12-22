@@ -8,6 +8,7 @@ public interface BaseContract {
 
     public interface IBaseView
     {
+
         void showProgress();
 
     }

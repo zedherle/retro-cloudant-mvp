@@ -13,20 +13,23 @@ public class App extends Application{
 
 
     public static Context appContext = null;
-
+    public static String androidId = null;
     @Override
     public void onCreate() {
         super.onCreate();
 
         Log.d("APP","Created");
-//        appContext = this.getApplicationContext();
+//      appContext = this.getApplicationContext();
         Log.d("APP",""+appContext);
+
+
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
